@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "vagabond"
+version = "0.1.0"
+description = ""
+authors = ["vbarda <vadim.barda@gmail.com>", "odobromyrova <olga.dobromirova@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+beautifulsoup4 = "~4.11.1"
+flair = "^0.11.3"
+funcy = "~1.17"
+html5lib = "~1.1"
+readability-lxml = "^0.8.1"
+
+[tool.poetry.dev-dependencies]
+black = "~22.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
