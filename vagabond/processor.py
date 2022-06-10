@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import Any, Dict, List
 
 import requests
 
@@ -19,7 +19,7 @@ class Processor:
         self._extractor = extractor
         self._annotators = annotators
 
-    def process(self, raw_data: bytes) -> str:
+    def process(self, raw_data: bytes, metadata: Dict[str, Any]) -> str:
         logger.info("Extracting text from raw data...")
         text = self._extractor.extract(raw_data.decode("utf-8"))
         logger.info("Successfully extracted text from raw data.")
@@ -33,7 +33,8 @@ class Processor:
         logger.info("Successfully annotated text.")
 
         logger.info("Writing the data to the store...")
-        uid = self._store.set_raw_data(raw_data)
+        uid = self._store.get_uid(raw_data)
+        self._store.set_metadata(uid, metadata)
         self._store.set_text(uid, text)
         self._store.set_annotations(uid, annotations)
         logger.info("Successfully wrote the data to the store.")
@@ -43,5 +44,6 @@ class Processor:
 def process_webpage(processor: Processor, url: str) -> str:
     logger.info("Fetching data for url: %s", url)
     webpage_content = requests.get(url).text
-    uid = processor.process(webpage_content.encode("utf-8"))
+    metadata = {"media_type": "webpage", "source": url}
+    uid = processor.process(webpage_content.encode("utf-8"), metadata)
     return uid
